@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import './App.css';
 import {Route} from 'react-router-dom';
 
 import AppHeader from './PCApp/Header/AppHeader';

@@ -10,4 +10,11 @@ cbRouter.get('/recent', (req: express.Request, res: express.Response) => {
     });
 });
 
+cbRouter.get('/seasonlist', (req: express.Request, res: express.Response) => {
+    DBClanBattle.GetCBList()
+    .then((data) => {
+        res.send(data);
+    });
+});
+
 export default cbRouter;

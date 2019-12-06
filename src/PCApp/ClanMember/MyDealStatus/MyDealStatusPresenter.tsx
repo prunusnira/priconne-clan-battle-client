@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import DealStatRow from './DealStatRow';
 import textMyDeal from './textMyDeal';
 import Damage from './Damage';
@@ -14,7 +14,9 @@ import {
     Row,
     Col,
     Button,
-    Table
+    Table,
+    CustomInput,
+    Input
 } from 'reactstrap';
 
 interface Props {
@@ -48,6 +50,11 @@ interface Props {
     cellEdit: (time: number) => void,
     cellDel: (time: number) => void,
 
+    // SeasonChange
+    changeSeason: (e: React.ChangeEvent<HTMLSelectElement>) => void,
+    seasonList: Array<JSX.Element>,
+    redirect: boolean,
+
     // Scale
     scale101: number,
     scale102: number,
@@ -73,131 +80,163 @@ interface Props {
 class MyDealStatusPreseneter extends Component<Props> {
     lang = Language.getLang();
 
+    componentDidMount() {
+        
+    }
+
+    static getDerivedPropsFromState(nextProps: Props) {
+
+    }
+
+    dateCalc() {
+        const year = this.props.seasonNum.substr(0, 2);
+        const month = this.props.seasonNum.substr(2, 2);
+
+        return (2000+parseInt(year)) + (textMyDeal.year as any)[this.lang] + " "
+                + month + (textMyDeal.month as any)[this.lang];
+    }
+
     render() {
         const self = this;
 
-        return (
-            <Container>
-                <Row>
-                    <Col xs="12">
-                        <h4>{(textMyDeal.title as any)[self.lang]}</h4>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="12" className="btn-group">
-                        <Button tag={Link} to={"/clan/mysheet/"+this.props.seasonNum+"/0"}>{(textMyDeal.typeDaily as any)[this.lang]}</Button>
-                        <Button tag={Link} to={"/clan/mysheet/"+this.props.seasonNum+"/1"}>{(textMyDeal.typeTurn as any)[this.lang]}</Button>
-                        <Button tag={Link} to={"/clan/mysheet/"+this.props.seasonNum+"/2"}>{(textMyDeal.typeList as any)[this.lang]}</Button>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="12">
-                        <CustomScaleTable
-                            scale101={this.props.scale101}
-                            scale102={this.props.scale102}
-                            scale103={this.props.scale103}
-                            scale104={this.props.scale104}
-                            scale105={this.props.scale105}
-                            scale201={this.props.scale201}
-                            scale202={this.props.scale202}
-                            scale203={this.props.scale203}
-                            scale204={this.props.scale204}
-                            scale205={this.props.scale205}
-                            scale301={this.props.scale301}
-                            scale302={this.props.scale302}
-                            scale303={this.props.scale303}
-                            scale304={this.props.scale304}
-                            scale305={this.props.scale305}
-                            seasonNum={this.props.seasonNum}
-                            scaledlg={this.props.scaledlg}
-                            toggleScaleDlg={this.props.toggleScaleDlg}
-                            editScaleValue={this.props.editScaleValue}
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="12" className="text-center">
-                        {
-                            (function() {
-                                if(self.props.type === CommonData.dealPageType.TYPE_DAY) {
-                                    return (textMyDeal.typeDaily as any)[self.lang]
-                                }
-                                else if(self.props.type === CommonData.dealPageType.TYPE_TURN) {
-                                    return (textMyDeal.typeTurn as any)[self.lang]
-                                }
-                                else if(self.props.type === CommonData.dealPageType.TYPE_LIST) {
-                                    return (textMyDeal.typeList as any)[self.lang]
-                                }
-                            })()
-                        }
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="12">
-                        <Table style={{width: "100%"}}>
-                            <thead>
-                                <tr>
-                                    <td colSpan={2}>{this.props.tabType}</td>
-                                    <td>Boss1</td>
-                                    <td>Boss2</td>
-                                    <td>Boss3</td>
-                                    <td>Boss4</td>
-                                    <td>Boss5</td>
-                                    <td>Sum</td>
-                                </tr>
-                            </thead>
-                            {/* 여기에 일일 딜량 추가 */}
-                            <DealStatRow
-                                type={self.props.type}
-                                onDmgClick={self.props.onDmgClick}
-                                list={self.props.display}
-                                scale101={self.props.scale101}
-                                scale102={self.props.scale102}
-                                scale103={self.props.scale103}
-                                scale104={self.props.scale104}
-                                scale105={self.props.scale105}
-                                scale201={self.props.scale201}
-                                scale202={self.props.scale202}
-                                scale203={self.props.scale203}
-                                scale204={self.props.scale204}
-                                scale205={self.props.scale205}
-                                scale301={self.props.scale301}
-                                scale302={self.props.scale302}
-                                scale303={self.props.scale303}
-                                scale304={self.props.scale304}
-                                scale305={self.props.scale305} />
-                        </Table>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="12" className="btn-group">
-                        <Button onClick={() => this.props.addNewDeal()}>{(textMyDeal.adddeal as any)[self.lang]}</Button>
-                    </Col>
-                </Row>
+        if(this.props.redirect) {
+            return <Redirect to={"/clan/mysheet/"+this.props.seasonNum+"/0"} />
+        }
+        else {
+            return (
+                <Container>
+                    <Row>
+                        <Col xs="12">
+                            <h4>{(textMyDeal.title as any)[self.lang]}</h4>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs="12">
+                            <CustomScaleTable
+                                scale101={this.props.scale101}
+                                scale102={this.props.scale102}
+                                scale103={this.props.scale103}
+                                scale104={this.props.scale104}
+                                scale105={this.props.scale105}
+                                scale201={this.props.scale201}
+                                scale202={this.props.scale202}
+                                scale203={this.props.scale203}
+                                scale204={this.props.scale204}
+                                scale205={this.props.scale205}
+                                scale301={this.props.scale301}
+                                scale302={this.props.scale302}
+                                scale303={this.props.scale303}
+                                scale304={this.props.scale304}
+                                scale305={this.props.scale305}
+                                seasonNum={this.props.seasonNum}
+                                scaledlg={this.props.scaledlg}
+                                toggleScaleDlg={this.props.toggleScaleDlg}
+                                editScaleValue={this.props.editScaleValue}
+                            />
+                        </Col>
+                    </Row>
+                    <Row style={{paddingBottom: "10px"}}>
+                        <Col xs="12" className="btn-group">
+                            <Button tag={Link} to={"/clan/mysheet/"+this.props.seasonNum+"/0"}>{(textMyDeal.typeDaily as any)[this.lang]}</Button>
+                            <Button tag={Link} to={"/clan/mysheet/"+this.props.seasonNum+"/1"}>{(textMyDeal.typeTurn as any)[this.lang]}</Button>
+                            {/*<Button tag={Link} to={"/clan/mysheet/"+this.props.seasonNum+"/2"}>{(textMyDeal.typeList as any)[this.lang]}</Button>*/}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs="6">
+                            <select className="form-control"
+                                id="seasonSel"
+                                onChange={this.props.changeSeason}>
+                                {this.props.seasonList}
+                            </select>
+                        </Col>
+                        <Col xs="6" className="btn-group">
+                            <Button onClick={() => this.props.addNewDeal()}>{(textMyDeal.adddeal as any)[self.lang]}</Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs="12" className="text-center">
+                            <h5>
+                            {this.dateCalc()} {(textMyDeal.cb as any)[this.lang]+" "}
+                            {
+                                (function() {
+                                    if(self.props.type === CommonData.dealPageType.TYPE_DAY) {
+                                        return (textMyDeal.typeDaily as any)[self.lang]
+                                    }
+                                    else if(self.props.type === CommonData.dealPageType.TYPE_TURN) {
+                                        return (textMyDeal.typeTurn as any)[self.lang]
+                                    }
+                                    else if(self.props.type === CommonData.dealPageType.TYPE_LIST) {
+                                        return (textMyDeal.typeList as any)[self.lang]
+                                    }
+                                })()
+                            }
+                            </h5>
+                            
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs="12">
+                            <Table style={{width: "100%", fontSize: "80%", textAlign: "center"}}>
+                                <thead>
+                                    <tr>
+                                        <td colSpan={2}>{this.props.tabType}</td>
+                                        <td>Boss1</td>
+                                        <td>Boss2</td>
+                                        <td>Boss3</td>
+                                        <td>Boss4</td>
+                                        <td>Boss5</td>
+                                        <td>Sum</td>
+                                    </tr>
+                                </thead>
+                                {/* 여기에 일일 딜량 추가 */}
+                                <DealStatRow
+                                    type={self.props.type}
+                                    onDmgClick={self.props.onDmgClick}
+                                    list={self.props.display}
+                                    scale101={self.props.scale101}
+                                    scale102={self.props.scale102}
+                                    scale103={self.props.scale103}
+                                    scale104={self.props.scale104}
+                                    scale105={self.props.scale105}
+                                    scale201={self.props.scale201}
+                                    scale202={self.props.scale202}
+                                    scale203={self.props.scale203}
+                                    scale204={self.props.scale204}
+                                    scale205={self.props.scale205}
+                                    scale301={self.props.scale301}
+                                    scale302={self.props.scale302}
+                                    scale303={self.props.scale303}
+                                    scale304={self.props.scale304}
+                                    scale305={self.props.scale305} />
+                            </Table>
+                        </Col>
+                    </Row>
 
-                <InputDeal
-                    display={this.props.inputDlg}
-                    submit={this.props.submitDlg}
-                    close={this.props.closeDlg}
-                    isNew={this.props.isInputNew}
-                    editDay={this.props.editDay}
-                    editTurn={this.props.editTurn}
-                    editDmg={this.props.editDmg}
-                    editTime={this.props.editTime}
-                    editBoss={this.props.editBoss}
-                />
+                    <InputDeal
+                        display={this.props.inputDlg}
+                        submit={this.props.submitDlg}
+                        close={this.props.closeDlg}
+                        isNew={this.props.isInputNew}
+                        editDay={this.props.editDay}
+                        editTurn={this.props.editTurn}
+                        editDmg={this.props.editDmg}
+                        editTime={this.props.editTime}
+                        editBoss={this.props.editBoss}
+                    />
 
-                <CellStatus
-                    display={this.props.cellStatDlg}
-                    type={this.props.type}
-                    celldata={this.props.cellData}
-                    cellnum={this.props.cellNum}
-                    close={this.props.closeCellDlg}
-                    edit={this.props.cellEdit}
-                    del={this.props.cellDel}
-                />
-            </Container>
-        )
+                    <CellStatus
+                        display={this.props.cellStatDlg}
+                        type={this.props.type}
+                        celldata={this.props.cellData}
+                        cellnum={this.props.cellNum}
+                        close={this.props.closeCellDlg}
+                        edit={this.props.cellEdit}
+                        del={this.props.cellDel}
+                    />
+                </Container>
+            )
+        }
     }
 }
 

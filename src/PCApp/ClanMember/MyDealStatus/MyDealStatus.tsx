@@ -27,6 +27,8 @@ interface State {
     list: Array<Damage>,
     tabType: string,
     season: string,
+    seasonlist: Array<JSX.Element>,
+    redirect: boolean,
     
     // 딜량 입력 다이얼로그
     inputDlg: boolean,
@@ -74,6 +76,8 @@ class MyDealStatus extends Component<RouteComponentProps<IMatchProps> & Props, S
         list: [],
         tabType: "",
         season: "",
+        seasonlist: [],
+        redirect: false,
 
         // 딜량 입력 다이얼로그
         inputDlg: false,
@@ -125,9 +129,11 @@ class MyDealStatus extends Component<RouteComponentProps<IMatchProps> & Props, S
         this.closeCellDlg = this.closeCellDlg.bind(this);
         this.cellEdit = this.cellEdit.bind(this);
         this.cellDel = this.cellDel.bind(this);
+        this.changeSeason = this.changeSeason.bind(this);
 
         // season 값 조절 - Promise 사용
         // season 값을 가져온 뒤에 이후 동작이 진행되어야 함
+        this.getSeasonList();
         this.getSeason(this.props.match.params.season)
         .then((data) => {
             this.setState({
@@ -163,6 +169,16 @@ class MyDealStatus extends Component<RouteComponentProps<IMatchProps> & Props, S
                 res(season);
             });
         }
+    }
+
+    getSeasonList() {
+        axios.get(CommonData.serverDataURL+'cb/seasonlist')
+        .then((res) => {
+            const seasons = res.data;
+            seasons.map((v: any) => {
+                this.state.seasonlist.push(<option value={v.season}>{v.season}</option>);
+            });
+        });
     }
 
     getSavedData(props: RouteComponentProps<IMatchProps> & Props) {
@@ -442,6 +458,13 @@ class MyDealStatus extends Component<RouteComponentProps<IMatchProps> & Props, S
         });
     }
 
+    changeSeason(e: React.ChangeEvent<HTMLSelectElement>) {
+        this.setState({
+            season: e.currentTarget.value,
+            redirect: true
+        });
+    }
+
     /* 랜더링 */
     render() {
         const type = parseInt(this.props.match.params.type);
@@ -476,6 +499,11 @@ class MyDealStatus extends Component<RouteComponentProps<IMatchProps> & Props, S
                         closeCellDlg={this.closeCellDlg}
                         cellEdit={this.cellEdit}
                         cellDel={this.cellDel}
+
+                        // Season Change
+                        changeSeason={this.changeSeason}
+                        seasonList={this.state.seasonlist}
+                        redirect={this.state.redirect}
 
                         // Scale
                         scale101={this.state.scale101}

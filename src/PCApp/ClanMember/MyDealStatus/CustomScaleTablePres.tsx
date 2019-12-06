@@ -37,13 +37,14 @@ class CustomScaleTablePresenter extends Component<Props> {
         return (
             <Card>
                 <CardHeader>
-                    {(textMyDeal.scale as any)[this.lang]}
+                    <h5>{(textMyDeal.scale as any)[this.lang]}</h5>
+                    {(textMyDeal.scaledesc as any)[this.lang]}
                 </CardHeader>
                 <CardBody>
                     <Row>
                         <Col xs="12">
                             <Button onClick={this.props.toggle}>수정</Button>
-                            <Table className="text-center">
+                            <Table className="text-center" style={{fontSize:"80%"}}>
                                 <tr>
                                     <td>Phase</td>
                                     <td>Boss 1</td>

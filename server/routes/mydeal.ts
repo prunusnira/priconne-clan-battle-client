@@ -35,7 +35,10 @@ mydealRouter.post('/add', (req: express.Request, res: express.Response) => {
     const damage = req.body.damage;
     const time = req.body.time;
 
-    DBMyDeal.AddMyDeal(playerid, season, day, turn, bossnum, damage, time);
+    DBMyDeal.AddMyDeal(playerid, season, day, turn, bossnum, damage, time)
+    .then((data) => {
+        res.sendStatus(200);
+    });
 });
 
 mydealRouter.post('/edit', (req: express.Request, res: express.Response) => {

@@ -3,6 +3,18 @@ const textMyDeal = {
         "ko":"클랜전 딜 시트 (개인용)",
         "jp":""
     },
+    year: {
+        "ko":"년",
+        "jp":""
+    },
+    month: {
+        "ko":"월",
+        "jp":""
+    },
+    cb: {
+        "ko":"클랜배틀",
+        "jp":""
+    },
     typeDaily: {
         "ko":"일일 딜 표",
         "jp":""
@@ -16,11 +28,15 @@ const textMyDeal = {
         "jp":""
     },
     adddeal: {
-        "ko":"딜 정보 추가",
+        "ko":"딜량 데이터 추가",
         "jp":""
     },
     scale: {
-        "ko":"배율",
+        "ko":"배율 수정하기",
+        "jp":""
+    },
+    scaledesc: {
+        "ko":"배율 단위는 수치에 0.01을 곱한 값으로 계산합니다",
         "jp":""
     },
     normal: {

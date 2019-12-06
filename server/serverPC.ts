@@ -72,4 +72,4 @@ app.get('*', (req: express.Request, res: express.Response) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 8082);
